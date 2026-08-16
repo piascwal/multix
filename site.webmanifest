@@ -1,0 +1,17 @@
+{
+  "name": "Multi Fusion - Les Tables en Feu",
+  "short_name": "Multi Fusion",
+  "description": "Entraîne-toi aux tables de multiplication en mode arcade neon.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070713",
+  "theme_color": "#0d0d24",
+  "lang": "fr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
