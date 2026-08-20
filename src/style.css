@@ -278,14 +278,14 @@ input{font-family:inherit;}
   padding:34px 10px 26px;
   position:relative;
 }
-#question-text{
+.question-display{
   font-size:clamp(40px,12vw,68px);
   font-weight:900;
   color:#fff;
   text-shadow:0 0 20px rgba(0,240,255,.5), 0 0 40px rgba(185,103,255,.3);
   transition:transform .2s ease;
 }
-#question-text.pop{animation:questionPop .35s ease;}
+.question-display.pop{animation:questionPop .35s ease;}
 @keyframes questionPop{
   0%{transform:scale(.7); opacity:0;}
   60%{transform:scale(1.08);}
@@ -522,6 +522,39 @@ table.lb-table tr.current-entry{
 }
 
 /* ============================================================
+   CHOIX DU MODE (ecran d'accueil)
+   ============================================================ */
+.mode-card{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:6px;
+  padding:28px 20px;
+  border-radius:20px;
+  background:var(--panel);
+  border:2px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(6px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  margin-bottom:16px;
+  transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.mode-card:active{transform:scale(.97);}
+.mode-card-icon{font-size:42px; line-height:1;}
+.mode-card-title{font-size:22px; font-weight:900; letter-spacing:1px; color:var(--text);}
+.mode-card-desc{font-size:13px; opacity:.75; max-width:300px; line-height:1.4;}
+.mode-card--solo{border-color:rgba(0,240,255,.35);}
+.mode-card--solo:active{border-color:var(--cyan); box-shadow:0 0 25px rgba(0,240,255,.35);}
+.mode-card--duel{border-color:rgba(185,103,255,.35);}
+.mode-card--duel:active{border-color:var(--violet); box-shadow:0 0 25px rgba(185,103,255,.4);}
+
+@media (hover:hover){
+  .mode-card--solo:hover{border-color:var(--cyan); box-shadow:0 0 25px rgba(0,240,255,.35);}
+  .mode-card--duel:hover{border-color:var(--violet); box-shadow:0 0 25px rgba(185,103,255,.4);}
+}
+
+/* ============================================================
    MODE DUEL
    Telephone tenu verticalement, un joueur a chaque extremite, assis
    face a face. Le panneau du haut est retourne a 180deg pour que ce
@@ -580,16 +613,23 @@ table.lb-table tr.current-entry{
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
+.duel-question-strip{
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
 .duel-question-bar{
   background:var(--panel);
   border:1px solid var(--panel-border);
-  padding:10px 16px;
+  padding:8px 16px;
   text-align:center;
-  flex-shrink:0;
 }
-.duel-question-bar #question-text{
-  font-size:clamp(28px,8vw,44px);
+.duel-question-bar--rotated{
+  transform:rotate(180deg);
+}
+.duel-question-bar .question-display{
+  font-size:clamp(22px,6vw,32px);
 }
 .duel-question-bar .difficulty-tag{
-  margin-top:4px;
+  margin-top:2px;
 }

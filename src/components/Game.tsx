@@ -361,7 +361,7 @@ export function Game({ tables, answerMode, gameMode, effects, onGameEnd }: GameP
       </div>
 
       <div class="panel question-box">
-        <div key={questionKey} id="question-text" class="pop">
+        <div key={questionKey} class="question-display pop">
           {questionText}
         </div>
         <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>

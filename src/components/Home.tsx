@@ -25,8 +25,7 @@ interface HomeProps {
   gameMode: GameMode;
   onGameModeChange: (mode: GameMode) => void;
   onStart: () => void;
-  onViewLeaderboard: () => void;
-  onStartDuel: () => void;
+  onBack: () => void;
 }
 
 function selectionInfoText(tables: ReadonlySet<number>): { text: string; multiplier: string } | null {
@@ -51,8 +50,7 @@ export function Home({
   gameMode,
   onGameModeChange,
   onStart,
-  onViewLeaderboard,
-  onStartDuel,
+  onBack,
 }: HomeProps) {
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
@@ -72,7 +70,9 @@ export function Home({
 
   return (
     <section class="screen active">
-      <h1 class="neon-title">⚡ MULTI FUSION ⚡</h1>
+      <h1 class="neon-title" style={{ fontSize: 'clamp(24px,6vw,38px)' }}>
+        🎮 MODE SOLO
+      </h1>
 
       <div class={`panel${shake ? ' error-shake' : ''}`}>
         <div class="section-label">
@@ -129,11 +129,8 @@ export function Home({
       <button type="button" class="btn-start" onClick={handleStart}>
         🚀 LANCER LA PARTIE
       </button>
-      <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onStartDuel}>
-        ⚔️ Mode Duel (2 joueurs)
-      </button>
-      <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onViewLeaderboard}>
-        🏆 Voir le classement
+      <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onBack}>
+        ⬅ Retour au menu
       </button>
     </section>
   );

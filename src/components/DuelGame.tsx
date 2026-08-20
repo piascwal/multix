@@ -126,11 +126,21 @@ export function DuelGame({ tables, player1Name, player2Name, effects, onDuelEnd 
           />
         </div>
 
-        <div class="duel-question-bar">
-          <div key={questionKey} id="question-text" class="pop">
-            {questionText}
+        {/* Question dupliquée et collée : une copie retournée pour le joueur du haut,
+            une copie normale pour le joueur du bas, chacun la lit dans le bon sens. */}
+        <div class="duel-question-strip">
+          <div class="duel-question-bar duel-question-bar--rotated">
+            <div key={`top-${questionKey}`} class="question-display pop">
+              {questionText}
+            </div>
+            <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>
           </div>
-          <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>
+          <div class="duel-question-bar">
+            <div key={`bottom-${questionKey}`} class="question-display pop">
+              {questionText}
+            </div>
+            <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>
+          </div>
         </div>
 
         {/* Joueur 1 : en bas du téléphone, orientation normale. */}

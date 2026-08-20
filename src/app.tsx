@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { unlockAudio } from './game/audio';
 import type { DuelResult } from './game/duel';
 import type { AnswerMode, GameMode, GameResult, LeaderboardScope } from './game/types';
+import { ModeSelect } from './components/ModeSelect';
 import { Home } from './components/Home';
 import { LeaderboardMenuScreen } from './components/LeaderboardMenuScreen';
 import { Game } from './components/Game';
@@ -11,12 +12,20 @@ import { DuelGame } from './components/DuelGame';
 import { DuelResults } from './components/DuelResults';
 import { useEffectsLayer } from './useEffectsLayer';
 
-type Screen = 'home' | 'leaderboard' | 'game' | 'results' | 'duel-setup' | 'duel-game' | 'duel-results';
+type Screen =
+  | 'mode-select'
+  | 'solo-home'
+  | 'leaderboard'
+  | 'game'
+  | 'results'
+  | 'duel-setup'
+  | 'duel-game'
+  | 'duel-results';
 
 const ALL_TABLES = new Set(Array.from({ length: 11 }, (_, i) => i + 2));
 
 export function App() {
-  const [screen, setScreen] = useState<Screen>('home');
+  const [screen, setScreen] = useState<Screen>('mode-select');
   const [tables, setTables] = useState<Set<number>>(new Set());
   const [answerMode, setAnswerMode] = useState<AnswerMode>('qcm');
   const [gameMode, setGameMode] = useState<GameMode>('classic');
@@ -84,7 +93,15 @@ export function App() {
     <>
       {effectsLayer.layer}
       <div id="app">
-        {screen === 'home' && (
+        {screen === 'mode-select' && (
+          <ModeSelect
+            onSelectSolo={() => setScreen('solo-home')}
+            onSelectDuel={() => setScreen('duel-setup')}
+            onViewLeaderboard={handleViewLeaderboard}
+          />
+        )}
+
+        {screen === 'solo-home' && (
           <Home
             tables={tables}
             onToggleTable={toggleTable}
@@ -94,13 +111,12 @@ export function App() {
             gameMode={gameMode}
             onGameModeChange={setGameMode}
             onStart={handleStart}
-            onViewLeaderboard={handleViewLeaderboard}
-            onStartDuel={() => setScreen('duel-setup')}
+            onBack={() => setScreen('mode-select')}
           />
         )}
 
         {screen === 'leaderboard' && (
-          <LeaderboardMenuScreen initialScope={leaderboardScope} onBack={() => setScreen('home')} />
+          <LeaderboardMenuScreen initialScope={leaderboardScope} onBack={() => setScreen('mode-select')} />
         )}
 
         {screen === 'game' && (
@@ -119,7 +135,7 @@ export function App() {
             defaultPlayerName={playerName}
             onLaunchConfetti={effectsLayer.launchConfetti}
             onSaveName={setPlayerName}
-            onMenu={() => setScreen('home')}
+            onMenu={() => setScreen('mode-select')}
             onReplay={() => setScreen('game')}
           />
         )}
@@ -131,7 +147,7 @@ export function App() {
             defaultPlayer1Name={player1Name}
             defaultPlayer2Name={player2Name}
             onStart={handleStartDuel}
-            onBack={() => setScreen('home')}
+            onBack={() => setScreen('mode-select')}
           />
         )}
 
@@ -146,7 +162,11 @@ export function App() {
         )}
 
         {screen === 'duel-results' && duelResult && (
-          <DuelResults result={duelResult} onMenu={() => setScreen('home')} onReplay={() => setScreen('duel-game')} />
+          <DuelResults
+            result={duelResult}
+            onMenu={() => setScreen('mode-select')}
+            onReplay={() => setScreen('duel-game')}
+          />
         )}
       </div>
     </>

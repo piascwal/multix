@@ -68,18 +68,25 @@ pour le MVP mobile.
 
 Téléphone posé à plat en vertical, un joueur à chaque extrémité, assis
 face à face. Écran scindé en haut/bas (pas côte à côte — premier essai
-côte à côte corrigé après retour utilisateur), même question partagée
-au milieu, premier qui clique la bonne réponse marque le point,
-question suivante. Règles retenues (validées avec l'utilisateur) :
+côte à côte corrigé après retour utilisateur), même question dupliquée
+au milieu (une copie normale, une copie retournée, collées l'une à
+l'autre) pour que chaque joueur la lise dans le bon sens, premier qui
+clique la bonne réponse marque le point, question suivante. Règles
+retenues (validées avec l'utilisateur) :
 
 - **QCM uniquement** — pas de mode clavier en duel, pour éviter d'avoir
   à partager le clavier physique entre deux joueurs (question ouverte
   du §5 initial, tranchée en faveur de la simplicité).
 - **Premier à 10 points gagne** (`game/duel.ts` → `DUEL_TARGET_SCORE`).
 - **Panneau du haut retourné à 180°** (`transform: rotate(180deg)` sur
-  tout le panneau du joueur 2) pour rester lisible à l'endroit depuis
-  sa position, face au joueur 1 — c'est l'idée initiale du plan §5, qui
-  avait été écartée à tort en implémentant d'abord un côte-à-côte.
+  tout le panneau du joueur 2, et sur sa copie de la question) pour
+  rester lisible à l'endroit depuis sa position, face au joueur 1 —
+  c'est l'idée initiale du plan §5, qui avait été écartée à tort en
+  implémentant d'abord un côte-à-côte.
+- **Mode Solo/Duel choisi dès le lancement** (`ModeSelect.tsx`, nouvel
+  écran racine) plutôt que le duel caché en second plan dans l'écran
+  Solo — corrigé après retour utilisateur ("le duel est un peu perdu
+  dans les menus").
 - Pas de combo/diversité/badges/classement en duel — scoring volontairement
   simple (+1 point au premier qui trouve la bonne réponse), cohérent
   avec la demande initiale.
