@@ -7,10 +7,13 @@ inline, sans build, sans types, sans tests) à une base **Vite + Preact +
 TypeScript strict** :
 
 - `src/game/` : logique pure et testée (questions, scoring, difficulté,
-  badges, classement), 100% indépendante de l'UI.
-- `src/components/` : écrans et composants Preact.
-- 41 tests Vitest sur `src/game/`, ESLint + `tsc --noEmit` en strict,
+  badges, classement, duel), 100% indépendante de l'UI.
+- `src/components/` : écrans et composants Preact — mode solo (Classique
+  / Time Attack) et mode Duel (2 joueurs, premier à 10 points).
+- 45 tests Vitest sur `src/game/`, ESLint + `tsc --noEmit` en strict,
   le tout exécuté en CI avant chaque déploiement.
+- PWA installable et jouable hors-ligne (service worker via
+  `vite-plugin-pwa`).
 
 Reste en `localStorage` (limite connue, cf. §2 dernière ligne) : le
 classement, toujours isolé derrière `src/game/leaderboard.ts`.
@@ -61,36 +64,38 @@ backend minimal (ex. Cloudflare Workers + D1, ou Supabase) derrière
 l'interface `leaderboard.ts` déjà isolée à l'étape 2. Non prioritaire
 pour le MVP mobile.
 
-## 5. Mode Duel (prévu, pas encore implémenté)
+## 5. Mode Duel ✅ fait
 
-Écran scindé verticalement en deux, même question pour les deux joueurs,
-premier qui répond marque le point, question suivante. Ce que la
-migration actuelle prépare pour ça :
+Écran scindé en deux (côte à côte sur écran large, empilé sous 560px),
+même question pour les deux joueurs, premier qui clique la bonne
+réponse marque le point, question suivante. Règles retenues (validées
+avec l'utilisateur) :
 
-- `game/questions.ts`, `scoring.ts`, `badges.ts` sont déjà mode-agnostiques
-  et réutilisables tels quels par un mode duel (même génération de
-  questions, mêmes formules de points).
-- `components/QcmAnswers.tsx` et `components/Keypad.tsx` sont déjà des
-  composants indépendants, instanciables deux fois côte à côte.
+- **QCM uniquement** — pas de mode clavier en duel, pour éviter d'avoir
+  à partager le clavier physique entre deux joueurs (question ouverte
+  du §5 initial, tranchée en faveur de la simplicité).
+- **Premier à 10 points gagne** (`game/duel.ts` → `DUEL_TARGET_SCORE`).
+- Pas de rotation 180° d'un des panneaux (idée initiale du plan) : les
+  deux joueurs sont côte à côte (pas face à face), donc les deux
+  panneaux restent à l'endroit.
+- Pas de combo/diversité/badges/classement en duel — scoring volontairement
+  simple (+1 point au premier qui trouve la bonne réponse), cohérent
+  avec la demande initiale.
 
-Ce qu'il reste à faire (pas commencé) :
-
-- Un composant `PlayerPanel` qui encapsule un jeu de réponse (QCM ou
-  clavier) pour **un** joueur, avec une prop d'orientation pour l'afficher
-  à l'envers (`transform: rotate(180deg)`) côté joueur qui fait face à
-  l'autre.
-- Un mode `duel` dans `game/` : au lieu d'un timer par joueur, une seule
-  question partagée, un arbitrage "premier qui valide une réponse
-  correcte gagne le point", et une transition question suivante commune
-  aux deux panneaux.
-- Gestion des deux entrées simultanées : en QCM pas de souci (deux zones
-  de boutons distinctes) ; en clavier, le clavier physique devra être
-  partitionné (ex. moitié gauche du clavier pour un joueur, pavé
-  numérique ou moitié droite pour l'autre) ou rester tactile uniquement
-  pour le duel.
-- Écran de résultats duel (score des deux joueurs côte à côte) — les
-  badges/classement actuels restent solo pour l'instant, un
-  classement duel séparé pourra être ajouté plus tard si besoin.
+Implémentation :
+- `game/duel.ts` (+ tests) : score cible et arbitrage du gagnant, pur et
+  testé comme le reste de `game/`.
+- `game/questions.ts` réutilisé tel quel (même génération de questions
+  que le solo) — confirme que l'extraction en modules mode-agnostiques
+  a payé.
+- `components/DuelSetup.tsx`, `DuelGame.tsx`, `DuelResults.tsx` +
+  `DuelQcmPanel.tsx` (variante de QCM qui accumule les essais faux d'un
+  joueur sans bloquer les autres boutons, jusqu'à ce que l'un des deux
+  trouve la bonne réponse).
+- Arbitrage "premier qui répond" via une ref mutable (`DuelEngine`,
+  même pattern que `Game.tsx`) plutôt que du state React/Preact, pour
+  éviter un bug de fermeture obsolète (closure stale) si les deux
+  joueurs cliquent à quelques millisecondes d'écart.
 
 ## 6. Priorisation suggérée
 
@@ -99,6 +104,6 @@ Ce qu'il reste à faire (pas commencé) :
 3. ✅ Migration Vite + TS strict + Preact + découpage en modules (fait)
 4. ✅ Tests Vitest sur la logique pure + CI qui les fait tourner (fait)
 5. ✅ Service worker / PWA installable (fait)
-6. Mode Duel (§5)
+6. ✅ Mode Duel (§5) (fait)
 7. Capacitor + publication stores
 8. (optionnel) backend classement en ligne

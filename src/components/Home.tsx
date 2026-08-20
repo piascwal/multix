@@ -26,6 +26,7 @@ interface HomeProps {
   onGameModeChange: (mode: GameMode) => void;
   onStart: () => void;
   onViewLeaderboard: () => void;
+  onStartDuel: () => void;
 }
 
 function selectionInfoText(tables: ReadonlySet<number>): { text: string; multiplier: string } | null {
@@ -51,6 +52,7 @@ export function Home({
   onGameModeChange,
   onStart,
   onViewLeaderboard,
+  onStartDuel,
 }: HomeProps) {
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
@@ -126,6 +128,9 @@ export function Home({
       <div class="hint-error">{error}</div>
       <button type="button" class="btn-start" onClick={handleStart}>
         🚀 LANCER LA PARTIE
+      </button>
+      <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onStartDuel}>
+        ⚔️ Mode Duel (2 joueurs)
       </button>
       <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onViewLeaderboard}>
         🏆 Voir le classement
