@@ -182,8 +182,8 @@ input{font-family:inherit;}
   box-shadow:0 0 18px rgba(255,47,208,.5);
 }
 
-/* ---- pseudo ---- */
-#player-name, #result-player-name{
+/* ---- pseudo / champs texte ---- */
+.text-input{
   width:100%;
   padding:14px 16px;
   border-radius:14px;
@@ -193,7 +193,8 @@ input{font-family:inherit;}
   font-size:17px;
   font-weight:600;
 }
-#player-name:focus, #result-player-name:focus{border-color:var(--cyan); box-shadow:0 0 14px rgba(0,240,255,.35);}
+.text-input:focus{border-color:var(--cyan); box-shadow:0 0 14px rgba(0,240,255,.35); outline:none;}
+.text-input::placeholder{color:rgba(238,240,255,.4);}
 
 .btn-start{
   width:100%;
@@ -522,41 +523,47 @@ table.lb-table tr.current-entry{
 
 /* ============================================================
    MODE DUEL
+   Telephone tenu verticalement, un joueur a chaque extremite, assis
+   face a face. Le panneau du haut est retourne a 180deg pour que ce
+   joueur le voit a l'endroit depuis sa position ; la question est
+   partagee, au milieu, non retournee.
    ============================================================ */
 .duel-arena{
   display:flex;
+  flex-direction:column;
   gap:2px;
-  align-items:stretch;
+  min-height:62vh;
   border-radius:20px;
   overflow:hidden;
 }
 .duel-panel{
   flex:1;
-  min-width:0;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
   background:var(--panel);
   border:1px solid var(--panel-border);
-  padding:16px 12px;
+  padding:18px 16px;
   transition:box-shadow .2s ease, background .2s ease;
+}
+.duel-panel--rotated{
+  transform:rotate(180deg);
 }
 .duel-panel.duel-winner{
   background:rgba(57,255,20,.12);
   box-shadow:inset 0 0 0 2px var(--green), 0 0 25px rgba(57,255,20,.4);
 }
-.duel-divider{
-  width:2px;
-  background:linear-gradient(180deg, transparent, var(--panel-border) 15%, var(--panel-border) 85%, transparent);
-  flex-shrink:0;
-}
 .duel-panel-header{
   display:flex;
   justify-content:space-between;
   align-items:baseline;
-  margin-bottom:12px;
-  gap:6px;
+  gap:8px;
 }
 .duel-player-name{
   font-weight:800;
-  font-size:14px;
+  font-size:16px;
   color:var(--text);
   overflow:hidden;
   text-overflow:ellipsis;
@@ -564,22 +571,25 @@ table.lb-table tr.current-entry{
 }
 .duel-player-score{
   font-weight:900;
-  font-size:16px;
+  font-size:18px;
   color:var(--cyan);
   flex-shrink:0;
 }
 .duel-qcm{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:8px;
+  gap:12px;
 }
-.duel-qcm .qcm-btn{
-  padding:16px 4px;
-  font-size:20px;
-  border-radius:14px;
+.duel-question-bar{
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  padding:10px 16px;
+  text-align:center;
+  flex-shrink:0;
 }
-
-@media (max-width:560px){
-  .duel-arena{flex-direction:column;}
-  .duel-divider{width:100%; height:2px;}
+.duel-question-bar #question-text{
+  font-size:clamp(28px,8vw,44px);
+}
+.duel-question-bar .difficulty-tag{
+  margin-top:4px;
 }

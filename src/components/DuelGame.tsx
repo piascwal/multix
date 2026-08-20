@@ -106,18 +106,34 @@ export function DuelGame({ tables, player1Name, player2Name, effects, onDuelEnd 
 
   return (
     <section class="screen active">
-      <h1 class="neon-title" style={{ fontSize: 'clamp(20px,5vw,32px)' }}>
+      <h1 class="neon-title" style={{ fontSize: 'clamp(16px,4vw,22px)', marginBottom: '10px' }}>
         ⚔️ DUEL
       </h1>
 
-      <div class="panel question-box">
-        <div key={questionKey} id="question-text" class="pop">
-          {questionText}
-        </div>
-        <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>
-      </div>
-
       <div class="duel-arena">
+        {/* Joueur 2 : en haut du téléphone, retourné à 180° pour lui apparaître à l'endroit
+            depuis sa position, face au joueur 1. */}
+        <div class={`duel-panel duel-panel--rotated${roundWinner === 2 ? ' duel-winner' : ''}`}>
+          <div class="duel-panel-header">
+            <span class="duel-player-name">{player2Name}</span>
+            <span class="duel-player-score">{scoreP2} / 10</span>
+          </div>
+          <DuelQcmPanel
+            options={options}
+            wrongAttempts={wrongP2}
+            revealedCorrectValue={revealedCorrectValue}
+            onAnswer={(v) => handleGuess(2, v)}
+          />
+        </div>
+
+        <div class="duel-question-bar">
+          <div key={questionKey} id="question-text" class="pop">
+            {questionText}
+          </div>
+          <div class={`difficulty-tag diff-${difficultyTag.tier}`}>{difficultyTag.text}</div>
+        </div>
+
+        {/* Joueur 1 : en bas du téléphone, orientation normale. */}
         <div class={`duel-panel${roundWinner === 1 ? ' duel-winner' : ''}`}>
           <div class="duel-panel-header">
             <span class="duel-player-name">{player1Name}</span>
@@ -128,21 +144,6 @@ export function DuelGame({ tables, player1Name, player2Name, effects, onDuelEnd 
             wrongAttempts={wrongP1}
             revealedCorrectValue={revealedCorrectValue}
             onAnswer={(v) => handleGuess(1, v)}
-          />
-        </div>
-
-        <div class="duel-divider" />
-
-        <div class={`duel-panel${roundWinner === 2 ? ' duel-winner' : ''}`}>
-          <div class="duel-panel-header">
-            <span class="duel-player-name">{player2Name}</span>
-            <span class="duel-player-score">{scoreP2} / 10</span>
-          </div>
-          <DuelQcmPanel
-            options={options}
-            wrongAttempts={wrongP2}
-            revealedCorrectValue={revealedCorrectValue}
-            onAnswer={(v) => handleGuess(2, v)}
           />
         </div>
       </div>

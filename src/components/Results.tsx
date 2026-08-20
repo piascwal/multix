@@ -78,6 +78,7 @@ export function Results({ result, defaultPlayerName, onLaunchConfetti, onSaveNam
           </div>
           <input
             type="text"
+            class="text-input"
             maxLength={15}
             placeholder="Ex: Ninja des Maths"
             value={nameInput}

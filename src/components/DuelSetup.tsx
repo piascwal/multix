@@ -60,16 +60,18 @@ export function DuelSetup({ tables, onToggleTable, defaultPlayer1Name, defaultPl
         </div>
         <input
           type="text"
+          class="text-input"
           maxLength={15}
-          placeholder="Joueur 1"
+          placeholder="Joueur 1 — en bas du téléphone"
           value={player1Name}
           onInput={(e) => setPlayer1Name((e.target as HTMLInputElement).value)}
           style={{ marginBottom: '10px' }}
         />
         <input
           type="text"
+          class="text-input"
           maxLength={15}
-          placeholder="Joueur 2"
+          placeholder="Joueur 2 — en haut, face au joueur 1"
           value={player2Name}
           onInput={(e) => setPlayer2Name((e.target as HTMLInputElement).value)}
         />
@@ -80,7 +82,8 @@ export function DuelSetup({ tables, onToggleTable, defaultPlayer1Name, defaultPl
         ⚔️ COMMENCER LE DUEL
       </button>
       <div class="selection-info" style={{ marginTop: '12px', textAlign: 'center' }}>
-        Premier à {DUEL_TARGET_SCORE} points gagne · QCM uniquement · même écran, un joueur de chaque côté
+        Premier à {DUEL_TARGET_SCORE} points gagne · QCM uniquement · posez le téléphone à plat,
+        un joueur à chaque extrémité — l'écran du haut est retourné pour rester lisible face à face
       </div>
       <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '12px' }} onClick={onBack}>
         ⬅ Retour au menu

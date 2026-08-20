@@ -66,18 +66,20 @@ pour le MVP mobile.
 
 ## 5. Mode Duel ✅ fait
 
-Écran scindé en deux (côte à côte sur écran large, empilé sous 560px),
-même question pour les deux joueurs, premier qui clique la bonne
-réponse marque le point, question suivante. Règles retenues (validées
-avec l'utilisateur) :
+Téléphone posé à plat en vertical, un joueur à chaque extrémité, assis
+face à face. Écran scindé en haut/bas (pas côte à côte — premier essai
+côte à côte corrigé après retour utilisateur), même question partagée
+au milieu, premier qui clique la bonne réponse marque le point,
+question suivante. Règles retenues (validées avec l'utilisateur) :
 
 - **QCM uniquement** — pas de mode clavier en duel, pour éviter d'avoir
   à partager le clavier physique entre deux joueurs (question ouverte
   du §5 initial, tranchée en faveur de la simplicité).
 - **Premier à 10 points gagne** (`game/duel.ts` → `DUEL_TARGET_SCORE`).
-- Pas de rotation 180° d'un des panneaux (idée initiale du plan) : les
-  deux joueurs sont côte à côte (pas face à face), donc les deux
-  panneaux restent à l'endroit.
+- **Panneau du haut retourné à 180°** (`transform: rotate(180deg)` sur
+  tout le panneau du joueur 2) pour rester lisible à l'endroit depuis
+  sa position, face au joueur 1 — c'est l'idée initiale du plan §5, qui
+  avait été écartée à tort en implémentant d'abord un côte-à-côte.
 - Pas de combo/diversité/badges/classement en duel — scoring volontairement
   simple (+1 point au premier qui trouve la bonne réponse), cohérent
   avec la demande initiale.
