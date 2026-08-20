@@ -9,8 +9,9 @@ TypeScript strict** :
 - `src/game/` : logique pure et testée (questions, scoring, difficulté,
   badges, classement, duel), 100% indépendante de l'UI.
 - `src/components/` : écrans et composants Preact — mode solo (Classique
-  / Time Attack) et mode Duel (2 joueurs, premier à 10 points).
-- 45 tests Vitest sur `src/game/`, ESLint + `tsc --noEmit` en strict,
+  / Time Attack), mode Duel (2 joueurs, premier à 10 points) et mode
+  2048 (révision d'une table façon 2048).
+- 63 tests Vitest sur `src/game/`, ESLint + `tsc --noEmit` en strict,
   le tout exécuté en CI avant chaque déploiement.
 - PWA installable et jouable hors-ligne (service worker via
   `vite-plugin-pwa`).
@@ -106,7 +107,50 @@ Implémentation :
   éviter un bug de fermeture obsolète (closure stale) si les deux
   joueurs cliquent à quelques millisecondes d'écart.
 
-## 6. Priorisation suggérée
+## 7. Mode 2048 ✅ fait
+
+Variante 2048 pour réviser UNE table à la fois : les tuiles qui
+apparaissent affichent l'expression (`4×3`), les tuiles issues d'une
+fusion affichent le résultat (`12`) — c'est cette alternance qui force
+le calcul mental. Deux points de conception discutés avec l'utilisateur
+avant implémentation :
+
+- **Tuiles jamais bloquées** : le moteur de fusion reste du 2048 pur
+  (toujours valide dès que deux tuiles adjacentes sont égales). L'habillage
+  "table de multiplication" ne s'applique qu'à l'affichage — tant que
+  la valeur est un multiple de la table ≤ ×10 (`multiplierOf` dans
+  `game/game2048.ts`), on montre l'expression ; au-delà, on retombe sur
+  le nombre brut, comme le 2048 classique après son palier "2048".
+  Ça évite tout risque de tuiles ×7/×9 qui ne peuvent plus jamais
+  fusionner (le vrai problème derrière "ça dépasse ×10", pas juste un
+  soucis d'affichage : le doublement pur ne visite naturellement que
+  les puissances de 2 du multiplicateur).
+- **"Table maîtrisée"** : la première fois qu'une fusion atteint **ou
+  dépasse** table×10 (`newValue >= targetValue`, pas une égalité stricte)
+  déclenche le bandeau de victoire — sinon une fusion qui saute
+  directement par-dessus la cible (ex: 32+32→64 sans jamais passer par
+  40 pile) ne la déclencherait jamais. Bug trouvé et corrigé pendant les
+  tests manuels en jouant la partie jusqu'au bout.
+- **Durée 5–10 minutes** : chrono fixe de 7 minutes affiché dans le HUD
+  (`Mode2048Game.tsx`), la partie s'arrête aussi plus tôt si la grille
+  se bloque. Les nouvelles tuiles piochent surtout de petits
+  multiplicateurs (biais de poids dans `pickSpawnMultiplier`) pour
+  limiter les fins de partie prématurées, tout en couvrant ×1 à ×10 sur
+  la durée d'une partie.
+
+Implémentation :
+- `game/game2048.ts` (+ 17 tests) : moteur de grille 4×4 pur et testé
+  (compression/fusion par ligne, rotation générique pour les 4
+  directions, détection de fin de partie, tirage des tuiles), aucune
+  dépendance à l'UI.
+- `components/Mode2048Setup.tsx` (sélection d'UNE seule table, pas
+  multi-table comme le solo/duel), `Mode2048Game.tsx` (grille CSS Grid,
+  contrôles clavier flèches/WASD + swipe tactile), `Mode2048Results.tsx`.
+- Vérifié manuellement en local : fusion/score/couleurs par palier,
+  swipe tactile (testé via `Touch`/`TouchEvent` synthétiques), fin de
+  partie par blocage de grille, victoire "table maîtrisée", rejouer.
+
+## 8. Priorisation suggérée
 
 1. ✅ Icône + PWA manifest (fait)
 2. ✅ Déploiement GitHub Pages via Actions (fait)
@@ -114,5 +158,6 @@ Implémentation :
 4. ✅ Tests Vitest sur la logique pure + CI qui les fait tourner (fait)
 5. ✅ Service worker / PWA installable (fait)
 6. ✅ Mode Duel (§5) (fait)
-7. Capacitor + publication stores
-8. (optionnel) backend classement en ligne
+7. ✅ Mode 2048 (§7) (fait)
+8. Capacitor + publication stores
+9. (optionnel) backend classement en ligne

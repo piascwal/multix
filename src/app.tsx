@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { unlockAudio } from './game/audio';
 import type { DuelResult } from './game/duel';
-import type { AnswerMode, GameMode, GameResult, LeaderboardScope } from './game/types';
+import type { AnswerMode, GameMode, GameResult, LeaderboardScope, Mode2048Result } from './game/types';
 import { ModeSelect } from './components/ModeSelect';
 import { Home } from './components/Home';
 import { LeaderboardMenuScreen } from './components/LeaderboardMenuScreen';
@@ -10,6 +10,9 @@ import { Results } from './components/Results';
 import { DuelSetup } from './components/DuelSetup';
 import { DuelGame } from './components/DuelGame';
 import { DuelResults } from './components/DuelResults';
+import { Mode2048Setup } from './components/Mode2048Setup';
+import { Mode2048Game } from './components/Mode2048Game';
+import { Mode2048Results } from './components/Mode2048Results';
 import { useEffectsLayer } from './useEffectsLayer';
 
 type Screen =
@@ -20,7 +23,10 @@ type Screen =
   | 'results'
   | 'duel-setup'
   | 'duel-game'
-  | 'duel-results';
+  | 'duel-results'
+  | 'mode2048-setup'
+  | 'mode2048-game'
+  | 'mode2048-results';
 
 const ALL_TABLES = new Set(Array.from({ length: 11 }, (_, i) => i + 2));
 
@@ -37,6 +43,9 @@ export function App() {
   const [player1Name, setPlayer1Name] = useState('');
   const [player2Name, setPlayer2Name] = useState('');
   const [duelResult, setDuelResult] = useState<DuelResult | null>(null);
+
+  const [table2048, setTable2048] = useState<number | null>(null);
+  const [result2048, setResult2048] = useState<Mode2048Result | null>(null);
 
   const effectsLayer = useEffectsLayer();
 
@@ -89,6 +98,17 @@ export function App() {
     setScreen('duel-results');
   }
 
+  function handleStart2048(table: number): void {
+    setTable2048(table);
+    unlockAudio();
+    setScreen('mode2048-game');
+  }
+
+  function handle2048End(result: Mode2048Result): void {
+    setResult2048(result);
+    setScreen('mode2048-results');
+  }
+
   return (
     <>
       {effectsLayer.layer}
@@ -97,6 +117,7 @@ export function App() {
           <ModeSelect
             onSelectSolo={() => setScreen('solo-home')}
             onSelectDuel={() => setScreen('duel-setup')}
+            onSelect2048={() => setScreen('mode2048-setup')}
             onViewLeaderboard={handleViewLeaderboard}
           />
         )}
@@ -166,6 +187,22 @@ export function App() {
             result={duelResult}
             onMenu={() => setScreen('mode-select')}
             onReplay={() => setScreen('duel-game')}
+          />
+        )}
+
+        {screen === 'mode2048-setup' && (
+          <Mode2048Setup defaultTable={table2048} onStart={handleStart2048} onBack={() => setScreen('mode-select')} />
+        )}
+
+        {screen === 'mode2048-game' && table2048 !== null && (
+          <Mode2048Game table={table2048} effects={effectsLayer} onGameEnd={handle2048End} />
+        )}
+
+        {screen === 'mode2048-results' && result2048 && (
+          <Mode2048Results
+            result={result2048}
+            onMenu={() => setScreen('mode-select')}
+            onReplay={() => setScreen('mode2048-game')}
           />
         )}
       </div>

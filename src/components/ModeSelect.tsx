@@ -1,10 +1,11 @@
 interface ModeSelectProps {
   onSelectSolo: () => void;
   onSelectDuel: () => void;
+  onSelect2048: () => void;
   onViewLeaderboard: () => void;
 }
 
-export function ModeSelect({ onSelectSolo, onSelectDuel, onViewLeaderboard }: ModeSelectProps) {
+export function ModeSelect({ onSelectSolo, onSelectDuel, onSelect2048, onViewLeaderboard }: ModeSelectProps) {
   return (
     <section class="screen active">
       <h1 class="neon-title">⚡ MULTI FUSION ⚡</h1>
@@ -19,6 +20,12 @@ export function ModeSelect({ onSelectSolo, onSelectDuel, onViewLeaderboard }: Mo
         <span class="mode-card-icon">⚔️</span>
         <span class="mode-card-title">Duel</span>
         <span class="mode-card-desc">2 joueurs, même écran, premier qui répond marque le point</span>
+      </button>
+
+      <button type="button" class="mode-card mode-card--2048" onClick={onSelect2048}>
+        <span class="mode-card-icon">🔢</span>
+        <span class="mode-card-title">2048</span>
+        <span class="mode-card-desc">Fusionne les tuiles d'une table de multiplication, façon 2048</span>
       </button>
 
       <button type="button" class="btn-secondary" style={{ width: '100%', marginTop: '4px' }} onClick={onViewLeaderboard}>
