@@ -30,17 +30,17 @@ classement, toujours isolé derrière `src/game/leaderboard.ts`.
 
 ## 3. Plan app mobile
 
-### Phase 1 — PWA (déjà amorcée)
+### Phase 1 — PWA ✅ faite
 
-Le favicon, les icônes 192/512/maskable et le `site.webmanifest` ajoutés
-dans ce commit posent les bases. Prochaine étape : un service worker
-(`vite-plugin-pwa` une fois la migration Vite faite) pour :
-- jouer hors-ligne (le jeu ne dépend d'aucune API réseau),
-- proposer "Ajouter à l'écran d'accueil" sur iOS/Android,
-- mettre en cache les assets pour un chargement instantané.
+Favicon, icônes 192/512/maskable, manifest généré et service worker
+(`vite-plugin-pwa`, mode `generateSW`) qui précache tous les assets :
+- jouable hors-ligne (le jeu ne dépend d'aucune API réseau),
+- installable ("Ajouter à l'écran d'accueil") sur iOS/Android/desktop,
+- chargement instantané une fois le premier visit passé (assets servis
+  depuis le cache).
 
-Coût : faible, gain immédiat (expérience quasi-native sans passer par
-un store).
+Vérifié en local (`vite preview` + inspection du Cache Storage) : les
+10 fichiers de l'app (JS, CSS, icônes, manifest) sont bien précachés.
 
 ### Phase 2 — App stores via Capacitor
 
@@ -98,7 +98,7 @@ Ce qu'il reste à faire (pas commencé) :
 2. ✅ Déploiement GitHub Pages via Actions (fait)
 3. ✅ Migration Vite + TS strict + Preact + découpage en modules (fait)
 4. ✅ Tests Vitest sur la logique pure + CI qui les fait tourner (fait)
-5. Mode Duel (§5)
-6. Service worker / PWA installable
+5. ✅ Service worker / PWA installable (fait)
+6. Mode Duel (§5)
 7. Capacitor + publication stores
 8. (optionnel) backend classement en ligne
