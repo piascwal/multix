@@ -48,11 +48,3 @@ export interface GameResult {
   gameMode: GameMode;
   boardScope: LeaderboardScope;
 }
-
-export interface Mode2048Result {
-  table: number;
-  score: number;
-  bestTileValue: number;
-  tableMastered: boolean;
-  endReason: 'time' | 'blocked';
-}
